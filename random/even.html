@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" placeholder="Enter any value" id="m">
+  <button onclick="checknumber()">Check</button>
+  <h1 id="av"></h1>
+
+  <script>
+    function checknumber() {
+      let m = document.getElementById("m").value;
+      let mm = document.getElementById("m")
+      let av = document.getElementById("av");
+
+      if (m % 2 == 0) {
+      av.innerText = m + " is Even number";
+      } else {
+      av.innerText = m + " is Odd number";
+      }
+    mm.value =""
+
+    }
+  </script>
+
+</body>
+</html>
