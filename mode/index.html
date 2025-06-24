@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>document</title>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --highlight: #f7c200;
+    }
+
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #f0e6d2;
+      --card-bg: rgba(30, 30, 30, 0.95);
+      --highlight: #ffd700;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.4s, color 0.4s;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://i.pinimg.com/originals/64/86/4f/64864f63a8b373c745c1735de10b8e2e.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .navbar h1 {
+      color: var(--highlight);
+      font-size: 24px;
+    }
+
+    .navbar .links a {
+      color: var(--highlight);
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .navbar .links a:hover {
+      text-decoration: underline;
+    }
+
+    .toggle-btn {
+      font-size: 1.5rem;
+      background-color: var(--highlight);
+      color: black;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .welcome {
+      text-align: center;
+      font-size: 2rem;
+      margin: 30px 10px;
+      animation: bounce 1s ease;
+      color: var(--highlight);
+      font-weight: bold;
+    }
+
+    @keyframes bounce {
+      0%   { transform: translateY(-50px); opacity: 0; }
+      50%  { transform: translateY(20px); opacity: 1; }
+      100% { transform: translateY(0); }
+    }
+
+    .cards-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      padding: 20px;
+    }
+
+    .card-row {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      padding: 25px;
+      border-radius: 15px;
+      width: 300px;
+      box-shadow: 0 8px 30px rgba(228, 5, 5, 0.763);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 50px rgba(93, 232, 7, 0.6);
+    }
+
+    .card h2 {
+      color: var(--highlight);
+    }
+
+    .card p {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .card-row {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <h1>🇮🇳 Indian Army Tribute</h1>
+    <div class="links">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+    <button class="toggle-btn" onclick="toggleTheme()" id="btnclick"></button>
+  </div>
+
+  <div class="welcome" id="welcomeMessage">
+    ना सोचा इनाम, ना चाहा कोई शौहरत,
+    सीमा की रक्षा ही है उसकी सबसे बड़ी इबादत।
+    माँ की ममता भी छोड़ी, वतन की खातिर,
+    ऐसा जुनून सिर्फ़ फौजी के अंदर होता है।
+  </div>
+
+  <div class="cards-wrapper">
+    <div class="card-row">
+      <div class="card">
+        <h2>Jai Hind</h2>
+        <p>“Our flag does not fly because the wind moves it, it flies with the last breath of each soldier who died protecting it.”</p>
+      </div>
+      <div class="card">
+        <h2>Indian Army</h2>
+        <p>“Either I will come back after hoisting the Tricolor, or I will come back wrapped in it. But I will come back for sure.”</p>
+      </div>
+    </div>
+
+    <div class="card-row">
+      <div class="card">
+        <h2>Salute Our Heroes</h2>
+        <p>“The Indian Army fights not to win wars, but to preserve peace, freedom, and our nation’s pride.”</p>
+      </div>
+      <div class="card">
+        <h2>Real Superheroes</h2>
+        <p>“No gadget, no cape. Just courage, discipline, and sacrifice — the Indian Army are our real heroes.”</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let btn = document.getElementById("btnclick");
+    let body = document.body;
+
+    function applyTheme(theme) {
+      if (theme === "dark") {
+        body.className = "dark";
+        btn.textContent = "night";
+      } else {
+        body.className = "";
+        btn.textContent = "day";
+      }
+    }
+
+    function toggleTheme() {
+      let current = body.className === "dark" ? "light" : "dark";
+      localStorage.setItem("theme", current);
+      applyTheme(current);
+    }
+
+    let savedTheme = localStorage.getItem("theme") || "light";
+    applyTheme(savedTheme);
+  </script>
+
+</body>
+</html>
