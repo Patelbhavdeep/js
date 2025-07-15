@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" id="arr" placeholder="Enter numbers with commas (e.g. 4,2,1,3)"><br><br>
+  <button id="btn">Sort Ascending</button>
+  <h1 id="result"></h1>
+
+  <script>
+    let btn = document.getElementById("btn")
+    btn.addEventListener("click", function(){
+      let input = document.getElementById("arr").value
+      let parts = input.split(",")
+      let arr = []
+
+      for(let i = 0; i < parts.length; i++) {
+        arr.push(Number(parts[i]))
+      }
+
+      for(let i = 0; i < arr.length; i++) {
+        for(let j = 0; j < arr.length - 1; j++) {
+          if(arr[j] > arr[j + 1]) {
+            let temp = arr[j]
+            arr[j] = arr[j + 1]
+            arr[j + 1] = temp
+          }
+        }
+      }
+
+      document.getElementById("result").innerText = `Sorted Array: ${arr.join(", ")}`
+      document.getElementById("arr").value = ""
+    })
+  </script>
+</body>
+</html>

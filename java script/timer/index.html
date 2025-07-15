@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Adventure Timer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap');
+
+    :root {
+      --primary: #FFD700;
+      --secondary: #00FFCC;
+      --accent: #FF6B6B;
+      --dark: #121212;
+      --light: #F8F8F8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      background-image: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--light);
+    }
+
+    .container {
+      perspective: 1000px;
+      width: 100%;
+      max-width: 500px;
+      padding: 20px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(20, 20, 20, 0.9));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+                  0 0 0 1px rgba(255, 215, 0, 0.1),
+                  0 0 30px rgba(255, 215, 0, 0.2) inset;
+      text-align: center;
+      transform-style: preserve-3d;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+      transform: rotate(30deg);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) rotateX(5deg);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6),
+                  0 0 0 1px rgba(255, 215, 0, 0.2),
+                  0 0 40px rgba(255, 215, 0, 0.3) inset;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    h1 {
+      margin: 0 0 30px;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+      position: relative;
+      display: inline-block;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: var(--secondary);
+      border-radius: 3px;
+    }
+
+    .time-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .time-input-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .time-input-group label {
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: var(--secondary);
+      letter-spacing: 1px;
+    }
+
+    input {
+      width: 80px;
+      padding: 12px;
+      text-align: center;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--light);
+      transition: all 0.3s ease;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    input:hover {
+      border-color: rgba(255, 215, 0, 0.3);
+      transform: translateY(-2px);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      transform: translateY(-3px);
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      border: none;
+      background: linear-gradient(45deg, var(--primary), #FFA500);
+      color: var(--dark);
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #FFA500, var(--primary));
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(255, 215, 0, 0.5);
+    }
+
+    button:hover::before {
+      opacity: 1;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .display {
+      margin-top: 30px;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--secondary);
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      border: 1px solid rgba(0, 255, 204, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .display:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+    }
+
+    /* Remove number input arrows */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .card {
+        padding: 30px 20px;
+      }
+      
+      .time-inputs {
+        gap: 10px;
+      }
+      
+      input {
+        width: 70px;
+        padding: 10px;
+        font-size: 1rem;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .display {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>ADVENTURE TIMER</h1>
+      
+      <div class="time-inputs">
+        <div class="time-input-group">
+          <label for="day">DAYS</label>
+          <input type="number" id="day" placeholder="0" min="0">
+        </div>
+        <div class="time-input-group">
+          <label for="hour">HOURS</label>
+          <input type="number" id="hour" placeholder="0" min="0" max="23">
+        </div>
+        <div class="time-input-group">
+          <label for="minute">MINUTES</label>
+          <input type="number" id="minute" placeholder="0" min="0" max="59">
+        </div>
+        <div class="time-input-group">
+          <label for="second">SECONDS</label>
+          <input type="number" id="second" placeholder="0" min="0" max="59">
+        </div>
+      </div>
+      
+      <button onclick="startTimer()">START COUNTDOWN</button>
+      
+      <div class="display" id="display">
+        SET YOUR TIME
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let timer;
+    let totalSeconds = 0;
+    let isRunning = false;
+
+    function startTimer() {
+      if (isRunning) {
+        if (confirm("Timer is already running. Do you want to reset it?")) {
+          resetTimer();
+        }
+        return;
+      }
+
+      let d = parseInt(document.getElementById("day").value) || 0;
+      let h = parseInt(document.getElementById("hour").value) || 0;
+      let m = parseInt(document.getElementById("minute").value) || 0;
+      let s = parseInt(document.getElementById("second").value) || 0;
+
+
+      if (d < 0) {
+        alert("દિવસ ને - માં ન નાખ મારા ભાઈ");
+        return;
+      }
+      if (h < 0 || h > 23) {
+        alert("કલાક હંમેશા 0 અને 23 નીવચે જ આવે");
+        return;
+      }
+      if (m < 0 || m > 59) {
+        alert("મિનિટ હંમેશા 0 અને 59 નીવચે જ આવે");
+        return;
+      }
+      if (s < 0 || s > 59) {
+        alert("સેકન્ડ હંમેશા 0 અને 59 નીવચે જ આવે");
+        return;
+      }
+
+      totalSeconds = (d * 24 * 60 * 60) + (h * 60 * 60) + (m * 60) + s;
+      
+      if (totalSeconds <= 0) {
+        alert("Please set a valid time!");
+        return;
+      }
+
+      clearInterval(timer);
+      isRunning = true;
+      updateButtonState();
+      updateDisplay();
+
+      timer = setInterval(() => {
+        if (totalSeconds <= 0) {
+          clearInterval(timer);
+          isRunning = false;
+          updateButtonState();
+          document.getElementById("display").textContent = "TIME'S UP!";
+          document.getElementById("display").style.color = "var(--accent)";
+          document.getElementById("display").style.textShadow = "0 0 15px rgba(255, 107, 107, 0.7)";
+          playCompletionSound();
+          return;
+        }
+
+        totalSeconds--;
+        updateDisplay();
+      }, 1000);
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      isRunning = false;
+      totalSeconds = 0;
+      updateButtonState();
+      document.getElementById("display").textContent = "SET YOUR TIME";
+      document.getElementById("display").style.color = "var(--secondary)";
+      document.getElementById("display").style.textShadow = "0 0 10px rgba(0, 255, 204, 0.5)";
+    }
+
+    function updateDisplay() {
+      let days = Math.floor(totalSeconds / (24 * 60 * 60));
+      let hours = Math.floor((totalSeconds % (24 * 60 * 60)) / 3600);
+      let minutes = Math.floor((totalSeconds % 3600) / 60);
+      let seconds = totalSeconds % 60;
+
+      hours = hours.toString().padStart(2, '0');
+      minutes = minutes.toString().padStart(2, '0');
+      seconds = seconds.toString().padStart(2, '0');
+
+      document.getElementById("display").textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    function updateButtonState() {
+      const button = document.querySelector("button");
+      if (isRunning) {
+        button.textContent = "RESET TIMER";
+        button.style.background = "linear-gradient(45deg, var(--accent), #FF8E8E)";
+      } else {
+        button.textContent = "START COUNTDOWN";
+        button.style.background = "linear-gradient(45deg, var(--primary), #FFA500)";
+      }
+    }
+
+    function playCompletionSound() {
+      // In a real implementation, you would play a sound here
+      // For example: new Audio('notification.mp3').play();
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculator</title>
+  <style>
+   body {
+  background-color: #9a5c19;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-image: url("https://i.pinimg.com/736x/9c/ea/18/9cea188c7863711fa196b61848b9f2e4.jpg");
+  background-repeat: no-repeat;
+  background-size: cover; 
+  background-position: center;
+}
+
+
+    .calculator {
+      background-color: #000;
+      border-radius: 15px;
+      padding: 20px;
+      width: 320px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .display {
+      background-color: black;
+      color: white;
+      text-align: right;
+      font-size: 48px;
+      padding: 20px;
+      border: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    button {
+      height: 60px;
+      border: none;
+      border-radius: 50%;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #gray {
+      background-color: #a5a5a5;
+      color: black;
+    }
+
+    #dark {
+      background-color: #333;
+    }
+
+    #orange {
+      background-color: orange;
+    }
+
+    #zero {
+      grid-column: span 2;
+      border-radius: 30px;
+    }
+    #dark-zero{
+      background-color: #333;
+
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <input type="text" class="display" id="display" disabled>
+
+    <div class="buttons">
+      <button id="gray" onclick="clearDisplay()">AC</button>
+      <button id="gray" onclick="deleteLast()">DEL</button>
+      <button id="gray" onclick="append('%')">%</button>
+      <button id="orange" onclick="append('/')">/</button>
+
+      <button id="dark" onclick="append('1')">1</button>
+      <button id="dark" onclick="append('2')">2</button>
+      <button id="dark" onclick="append('3')">3</button>
+      <button id="orange" onclick="append('+')">+</button>
+      
+      <button id="dark" onclick="append('4')">4</button>
+      <button id="dark" onclick="append('5')">5</button>
+      <button id="dark" onclick="append('6')">6</button>
+      <button id="orange" onclick="append('-')">-</button>
+      
+      <button id="dark" onclick="append('7')">7</button>
+      <button id="dark" onclick="append('8')">8</button>
+      <button id="dark" onclick="append('9')">9</button>
+      <button id="orange" onclick="append('*')">*</button>
+
+
+
+      <button id="dark-zero" onclick="append('0')">0</button>
+      <button id="dark" onclick="append('.')">.</button>
+      <button id="orange" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    let display = document.getElementById('display');
+
+    function append(value) {
+      display.value += value;
+    }
+
+    function clearDisplay() {
+      display.value = '';
+    }
+
+    function deleteLast() {
+      display.value = display.value.slice(0, -1);
+    }
+
+    function calculate() {
+      try {
+        display.value = eval(display.value);
+      } catch {
+        display.value = "Error";
+      }
+    }
+  </script>
+
+</body>
+</html>

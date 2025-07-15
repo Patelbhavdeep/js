@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" id="arr" placeholder="Enter numbers separated by comma"><br><br>
+  <button id="btn">Find Sum</button>
+  <h1 id="result"></h1>
+
+  <script>
+    let btn = document.getElementById("btn")
+    btn.addEventListener("click", function(){
+      let input = document.getElementById("arr").value
+      let parts = input.split(",")
+      let sum = 0
+
+      for(let i = 0; i < parts.length; i++) {
+        sum = sum + Number(parts[i])
+      }
+
+      document.getElementById("result").innerText = `Sum = ${sum}`
+      document.getElementById("arr").value = ""
+    })
+  </script>
+</body>
+</html>

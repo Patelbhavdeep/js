@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="number" id="a" placeholder="Enter first value"><br><br>
+  <input type="number" id="b" placeholder="Enter second value"><br><br>
+  <input type="number" id="c" placeholder="Enter third value"><br><br>
+
+  <button onclick="findMaximumnumber()">Find Maximum</button>
+
+  <h1 id="av"></h1>
+
+  <script>
+    function findMaximumnumber() {
+      let a = document.getElementById("a").value
+      let b = document.getElementById("b").value
+      let c = document.getElementById("c").value
+
+      let max = Math.max(a, b, c);
+
+      document.getElementById("av")
+      av.innerText = max + " is maximum number ";
+    }
+  </script>
+
+</body>
+</html>

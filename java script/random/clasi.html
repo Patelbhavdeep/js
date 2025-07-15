@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <input type="number" id="a" placeholder="First number"><br><br>
+  <input type="number" id="b" placeholder="Second number"><br><br>
+  <select id="operation">
+    <option value="+">Add</option>
+    <option value="-">Subtract</option>
+    <option value="*">Multiply</option>
+    <option value="/">Divide</option>
+  </select><br><br>
+  <button id="btn">Calculate</button>
+  <h1 id="result"></h1>
+
+  <script>
+    let btn = document.getElementById("btn")
+    btn.addEventListener("click", function(){
+      let a = document.getElementById("a").value
+      let b = document.getElementById("b").value
+      let op = document.getElementById("operation").value
+      let result
+
+      switch(op){
+        case '+': result = Number(a) + Number(b); break
+        case '-': result = Number(a) - Number(b); break
+        case '*': result = Number(a) * Number(b); break
+        case '/': result = Number(a) / Number(b); break
+      }
+
+      document.getElementById("result").innerText = `Result = ${result}`
+      document.getElementById("a").value = ""
+      document.getElementById("b").value = ""
+    })
+  </script>
+</body>
+</html>

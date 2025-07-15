@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <input type="number" id="num" placeholder="Enter a number"><br><br>
+  <button id="btn">Find Factorial</button>
+  <h1 id="result"></h1>
+
+  <script>
+    let btn = document.getElementById("btn")
+    btn.addEventListener("click", function(){
+      let num = document.getElementById("num").value
+      let fact = 1
+
+      for(let i = 1; i <= num; i++) {
+        fact = fact * i
+      }
+
+      document.getElementById("result").innerText = `Factorial = ${fact}`
+      document.getElementById("num").value = ""
+    })
+  </script>
+</body>
+</html>

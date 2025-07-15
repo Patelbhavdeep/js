@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <style>
+    body {
+      height: 90vh;
+      display: flex;
+      justify-content: center;
+      align-items: end;
+    }
+
+    button {
+      width: 190px;
+      height: 30px;
+      border: 2px solid red;
+      cursor: pointer;
+      border: none;
+    
+    }
+    button:hover{
+        border-radius: 20px;
+        transition: 3s;
+        width: 100px;
+        background-color: black;
+        color: white;
+    } 
+  </style>
+</head>
+<body>
+  <button id="button">Click Me</button>
+
+  <script>
+    let button = document.getElementById("button");
+
+    button.addEventListener("click", function () {
+      let x = Math.floor(Math.random() * 255);
+      let y = Math.floor(Math.random() * 255);
+      let z = Math.floor(Math.random() * 255);
+      let randomcolor = ` rgb(${x}, ${y}, ${z})`;
+
+      document.body.style.backgroundColor = randomcolor;
+    });
+  </script>
+</body>
+</html>

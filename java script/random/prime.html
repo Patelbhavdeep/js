@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" placeholder="Enter first value" id="a"> <br><br>
+    <input type="text" placeholder="Enter second value" id="b"> <br><br>
+    <button id="btn">click</button>
+    <h1 id="av"></h1>
+    <h1 id="bv"></h1>
+    <script>
+        let btn = document.getElementById("btn")
+        btn.addEventListener("click",function(){
+            let a = document.getElementById("a").value
+            let b = document.getElementById("b").value
+            let aa = document.getElementById("a")
+            let bb = document.getElementById("b")
+            let c 
+
+            c = a
+            a = b
+            b = c 
+            
+            let av = document.getElementById("av")
+            let bv = document.getElementById("bv")
+            av.innerText = `A = ${a}`
+            bv.innerText = `B = ${b}`
+            aa.value = ""
+            bb.value = ""
+        })
+    </script>
+    
+</body>
+</html>

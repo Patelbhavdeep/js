@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Online Shopping Site for Mobile</title>
+    <link rel="shortcut icon" href="https://www.citypng.com/public/uploads/preview/flipkart-logo-icon-hd-png-701751694706828v1habfry9b.png" type="image/x-icon">   
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <style>
+      html,
+      body {
+            position: relative;
+        height: 100%;
+      }
+
+      body {
+        background: #eee;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        color: #000;
+        margin: 0;
+        padding: 0;
+      }
+
+      swiper-container {
+        width: 100%;
+        height: 300px;
+      }
+
+      swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+      }
+
+      /* Add new styles for search results */
+      .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-radius: 0 0 8px 8px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+      }
+      
+      .search-result-item {
+        padding: 10px 15px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+      
+      .search-result-item:hover {
+        background-color: #f5f5f5;
+      }
+      
+      .search-result-item img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        margin-right: 15px;
+      }
+      
+      .search-result-info {
+        flex: 1;
+      }
+      
+      .search-result-title {
+        font-weight: 500;
+        margin-bottom: 3px;
+      }
+      
+      .search-result-price {
+        color: #388e3c;
+        font-weight: 500;
+      }
+      
+      .no-results {
+        padding: 15px;
+        text-align: center;
+        color: #878787;
+      }
+      
+      .search-container {
+        position: relative;
+        width: 100%;
+      }
+
+      /* Search results page styles */
+      #searchResultsPage {
+        display: none;
+        margin-top: 20px;
+      }
+      
+      #searchResultsGrid {
+        display: grid;
+        gap: 20px;
+      }
+      
+      .product-card {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+      
+      .product-image-container {
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+      }
+      
+      .product-image {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div class="main container mx-auto">
+      <div class="bg-white w-full h-[80px]">
+        <div class="nav px-3 container mx-auto h-[80px] flex items-center">
+          <img
+            src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS_ag_JaKwMeU0qRSKEYYnWgGPsHcc610M-dI9TCtNqRNTGumS-"
+            class="h-20"
+            alt="Flipkart Logo"
+          />
+
+          <div class="search-container hidden md:flex w-[53%] h-[45px] ml-10">
+            <div class="input w-full h-[45px] bg-[#F0F5FF] rounded-lg flex items-center px-4">
+              <i class="ri-search-line text-2xl text-[#818489]"></i>
+              <input
+                type="text"
+                id="searchInput"
+                class="w-[80%] text-lg text-black font-normal outline-0 ml-2.5 bg-transparent"
+                placeholder="Search for Products, Brands and More"
+                autocomplete="off"
+              />
+            </div>
+            <div id="searchResults" class="search-results"></div>
+          </div>
+
+          <div
+            class="buttons w-auto gap-3 h-full flex items-center ml-auto space-x-6"
+          >
+            <div class="relative group hidden sm:block">
+              <button
+                class="flex items-center space-x-2 bg-white px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white transition"
+                id="dropdownButton"
+              >
+                <i class="ri-user-line text-xl"></i>
+                <span class="font-semibold">Login</span>
+                <i class="ri-arrow-down-s-line"></i>
+              </button>
+
+              <div
+                id="dropdownMenu"
+                class="absolute left-0 right-16 mt-2 w-52 md:w-64 bg-white shadow-lg rounded-lg hidden group-hover:block z-50"
+              >
+                <div
+                  class="flex justify-between items-center space-x-3 mr-5 p-4 border-b"
+                >
+                  <p>New Customer ?</p>
+                  <button class="text-[#2874f0] font-semibold">Sign Up</button>
+                </div>
+                <div class="p-4">
+                  <a
+                    href="#"
+                    class="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg"
+                  >
+                    <i class="ri-user-line text-lg"></i>
+                    <span>My Profile</span>
+                  </a>
+                  <a
+                    href="#"
+                    class="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg"
+                  >
+                    <i class="ri-add-circle-line text-lg"></i>
+                    <span>Flipkart Plus Zone</span>
+                  </a>
+                  <a
+                    href="#"
+                    class="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg"
+                  >
+                    <i class="ri-folder-line text-lg"></i>
+                    <span>Orders</span>
+                  </a>
+                  <a
+                    href="#"
+                    class="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg"
+                  >
+                    <i class="ri-heart-line text-lg"></i>
+                    <span>Wishlist</span>
+                  </a>
+                  <a
+                    href="#"
+                    class="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg"
+                  >
+                    <i class="ri-coupon-line text-lg"></i>
+                    <span>Rewards</span>
+                  </a>
+                  <a
+                    href="#"
+                    class="flex items-center space-x-3 hover:bg-gray-100 p-3 rounded-lg"
+                  >
+                    <i class="ri-gift-line text-lg"></i>
+                    <span>Gift Cards</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="cart flex items-center gap-3 cursor-pointer">
+              <i class="ri-shopping-cart-2-line hidden sm:block text-2xl"></i>
+              <p class="hidden xl:block text-xl font-[350]">Cart</p>
+            </div>
+            <div class="home flex items-center gap-3 cursor-pointer">
+              <i class="ri-store-line text-2xl hidden sm:block"></i>
+              <p class="hidden xl:block text-xl font-[350]">Become a Seller</p>
+            </div>
+            <i class="ri-more-2-line text-2xl hidden sm:block"></i>
+            <i class="ri-menu-line md:hidden text-2xl pr-4 cursor-pointer" id="hamburger-icon"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile menu (unchanged) -->
+      <div id="mobile-menu" class="fixed inset-0 bg-black/50 z-50 hidden">
+        <div class="bg-white w-[80%] max-w-sm h-full transform transition-transform duration-300 translate-x-[-100%]" id="menu-content">
+          <div class="p-4 border-b flex justify-between items-center">
+            <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS_ag_JaKwMeU0qRSKEYYnWgGPsHcc610M-dI9TCtNqRNTGumS-" class="h-12" alt="Flipkart Logo" />
+            <button id="close-menu" class="text-2xl"><i class="ri-close-line"></i></button>
+          </div>
+          <div class="overflow-y-auto h-[calc(100%-60px)]">
+            <nav class="p-4">
+              <a href="#" class=" py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg flex items-center space-x-2">
+                <i class="ri-user-line text-lg"></i>
+                <span>Login & Signup</span>
+              </a>
+              <a href="#" class=" py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg flex items-center space-x-2">
+                <i class="ri-shopping-cart-2-line text-lg"></i>
+                <span>Cart</span>
+              </a>
+              <a href="#" class=" py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg flex items-center space-x-2">
+                <i class="ri-store-line text-lg"></i>
+                <span>Become a Seller</span>
+              </a>
+              <div class="border-t my-3"></div>
+              <a href="#" class="block py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg">Electronics</a>
+              <a href="#" class="block py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg">TVs & Appliances</a>
+              <a href="#" class="block py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg">Men</a>
+              <a href="#" class="block py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg">Women</a>
+              <a href="#" class="block py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg">Baby & Kids</a>
+              <a href="#" class="block py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg">Home & Furniture</a>
+              <a href="#" class="block py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg">Sports & Books</a>
+              <a href="#" class="block py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg">Flights</a>
+              <a href="#" class="block py-3 px-4 text-gray-800 hover:bg-gray-100 rounded-lg">Offer Zone</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Results Page -->
+      <div id="searchResultsPage" class="container mx-auto px-4 py-6 hidden">
+        <div class="flex items-center mb-6">
+          <h2 class="text-2xl font-semibold">Search Results for "<span id="searchQueryDisplay"></span>"</h2>
+          <span class="ml-4 text-gray-600" id="resultsCount"></span>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" id="searchResultsGrid">
+          <!-- Search results will be inserted here -->
+        </div>
+        
+        <div id="noResults" class="text-center py-10 hidden">
+          <img src="https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/error-no-search-results_2353c5.png" 
+               alt="No results found" class="w-48 mx-auto mb-4">
+          <h3 class="text-xl font-medium text-gray-800">Sorry, no results found!</h3>
+          <p class="text-gray-600 mt-2">Please check the spelling or try searching for something else</p>
+        </div>
+      </div>
+
+      <!-- Rest of your original content -->
+      <div id="mainContent">
+        <div class="container bg-white shadow-sm mt-5 mx-auto px-0 xl:px-16">
+          <div class="mx-auto lg:px-16">
+            <div
+              class="flex items-center justify-between overflow-x-auto py-2 space-x-8"
+            >
+              <div
+                class="flex flex-col items-center min-w-[80px] cursor-pointer group"
+              >
+                <img
+                  src="https://rukminim1.flixcart.com/flap/80/80/image/29327f40e9c4d26b.png"
+                  alt="Grocery"
+                  class="w-16"
+                />
+                <span class="text-sm mt-1 font-semibold text-center">Kilos</span>
+              </div>
+              <div
+                class="flex flex-col items-center min-w-[80px] cursor-pointer group"
+              >
+                <img
+                  src="https://rukminim1.flixcart.com/flap/80/80/image/22fddf3c7da4c4f4.png"
+                  alt="Mobiles"
+                  class="w-16"
+                />
+                <span class="text-sm mt-1 font-semibold text-center"
+                  >Mobiles</span
+                >
+              </div>
+              <div
+                class="flex flex-col items-center min-w-[80px] cursor-pointer group"
+              >
+                <img
+                  src="https://rukminim1.flixcart.com/flap/80/80/image/82b3ca5fb2301045.png"
+                  alt="Fashion"
+                  class="w-16"
+                />
+                <span class="text-sm mt-1 font-semibold text-center"
+                  >Fashion</span
+                >
+              </div>
+              <div
+                class="flex flex-col items-center min-w-[80px] cursor-pointer group"
+              >
+                <img
+                  src="https://rukminim1.flixcart.com/flap/80/80/image/69c6589653afdb9a.png"
+                  alt="Electronics"
+                  class="w-16"
+                />
+                <span class="text-sm mt-1 font-semibold text-center"
+                  >Electronics</span
+                >
+              </div>
+              <div
+                class="flex flex-col items-center min-w-[80px] cursor-pointer group"
+              >
+                <img
+                  src="https://rukminim1.flixcart.com/flap/80/80/image/ab7e2b022a4587dd.jpg"
+                  alt="Home"
+                  class="w-16"
+                />
+                <span class="text-sm mt-1 font-semibold text-center"
+                  >Home & Furniture</span
+                >
+              </div>
+              <div
+                class="flex flex-col items-center min-w-[80px] cursor-pointer group"
+              >
+                <img
+                  src="https://rukminim1.flixcart.com/flap/80/80/image/0ff199d1bd27eb98.png"
+                  alt="Appliances"
+                  class="w-16"
+                />
+                <span class="text-sm mt-1 font-semibold text-center"
+                  >Appliances</span
+                >
+              </div>
+              <div
+                class="flex flex-col items-center min-w-[80px] cursor-pointer group"
+              >
+                <img
+                  src="https://rukminim2.flixcart.com/flap/64/64/image/71050627a56b4693.png?q=100"
+                  alt="Travel"
+                  class="w-16"
+                />
+                <span class="text-sm mt-1 font-semibold text-center"
+                  >Flight Bookings</span
+                >
+              </div>
+              <div
+                class="flex flex-col items-center min-w-[80px] cursor-pointer group"
+              >
+                <img
+                  src="https://rukminim2.flixcart.com/flap/64/64/image/dff3f7adcf3a90c6.png?q=100"
+                  alt="Beauty"
+                  class="w-16"
+                />
+                <span class="text-sm mt-1 font-semibold text-center"
+                  >Beauty, Toys & More</span
+                >
+              </div>
+              <div
+                class="flex flex-col items-center min-w-[80px] cursor-pointer group"
+              >
+                <img
+                  src="https://rukminim1.flixcart.com/fk-p-flap/80/80/image/05d708653beff580.png"
+                  alt="Two Wheelers"
+                  class="w-16"
+                />
+                <span class="text-sm mt-1 font-semibold text-center"
+                  >Two Wheelers</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Slider Section -->
+        <div class="container-fluid w-full mx-auto mt-4">
+          <div class="relative">
+            <!-- Slider Container -->
+            <div class="overflow-hidden relative" id="slider">
+              <div
+                class="flex transition-transform duration-500 ease-out touch-pan-y"
+                id="slider-container"
+                style="transform: translateX(0%)"
+              >
+                <!-- Slide 1 -->
+                <div class="min-w-full">
+                  <img
+                    src="https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/bdec5c09790f854c.png?q=20"
+                    alt="Flight Deal"
+                    class="w-full h-[300px] object-cover"
+                  />
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="min-w-full">
+                  <img
+                    src="https://rukminim2.flixcart.com/fk-p-flap/3376/560/image/8a89ee09acc1a9e5.jpg?q=50"
+                    alt="Fashion Deal"
+                    class="w-full h-[300px] object-cover"
+                  />
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="min-w-full">
+                  <img
+                    src="https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/c928b14a5cddaf18.jpg?q=80"
+                    alt="Electronics Deal"
+                    class="w-full h-[300px] object-cover"
+                  />
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="min-w-full">
+                  <img
+                    src="https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/21c72584989b09a9.jpg?q=50"
+                    alt="Mobile Deal"
+                    class="w-full h-[300px] object-cover"
+                  />
+                </div>
+
+                <!-- Slide 5 -->
+                <div class="min-w-full">
+                  <img
+                    src="https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/2b0c79fb2e7ed3b0.jpg?q=90"
+                    alt="Mobile Deal"
+                    class="w-full h-[300px] object-cover"
+                  />
+                </div>
+
+                <!-- Slide 6 -->
+                <div class="min-w-full">
+                  <img
+                    src="https://rukminim2.flixcart.com/fk-p-flap/1620/270/image/ed0b871eaf8524c6.jpeg?q=90"
+                    alt="Mobile Deal"
+                    class="w-full h-[300px] object-cover"
+                  />
+                </div>
+              </div>
+
+              <!-- Navigation Buttons -->
+              <button
+                class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 p-3 rounded-full shadow-lg z-10 hover:bg-white transition-colors"
+                id="prevBtn"
+              >
+                <i class="ri-arrow-left-s-line text-2xl"></i>
+              </button>
+              <button
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 p-3 rounded-full shadow-lg z-10 hover:bg-white transition-colors"
+                id="nextBtn"
+              >
+                <i class="ri-arrow-right-s-line text-2xl"></i>
+              </button>
+
+              <!-- Dots Navigation -->
+              <div
+                class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3"
+                id="dotsContainer"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="slid w-full lg:h-[350px] shadow-lg bg-white pt-2 px-[2vw] mt-12 pb-3.5"
+        >
+          <h1 class="text-xl md:text-3xl font-[500] text-[#1F1F1F]">
+            Top Offers
+          </h1>
+          <div class="flex justify-between">
+            <div class="w-full lg:w-[80%]">
+              <swiper-container
+                class="mySwiperr h-full"
+                space-between="40"
+                free-mode="true"
+              >
+                <swiper-slide class="flex flex-col lg:h-[280px]">
+                  <img
+                    class="p-7 h-fit hover:scale-[1.05]"
+                    src="https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/3/k/z/-original-imah852sfzd9hgju.jpeg?q=70"
+                    alt=""
+                  />
+                  <p class="text-center">moto g35 5G</p>
+                  <p class="font-semibold text-center">From ₹9,999</p>
+                </swiper-slide>
+                <swiper-slide class="flex flex-col lg:h-[280px]">
+                  <img
+                    class="p-8 hover:scale-[1.05]"
+                    src="https://rukminim2.flixcart.com/image/612/612/xif0q/bag/p/k/m/-original-imah4v43cjg4d9kh.jpeg?q=70"
+                    alt=""
+                  />
+                  <p class="text-center">moto g35 5G</p>
+                  <p class="font-semibold text-center">From ₹9,999</p>
+                </swiper-slide>
+                <swiper-slide class="flex flex-col lg:h-[280px]">
+                  <img
+                    class="p-8 hover:scale-[1.05]"
+                    src="https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/x/b/c/10-2222-groofer-brown-original-imagq5zepkz769eq.jpeg?q=70"
+                    alt=""
+                  />
+                  <p class="text-center">moto g35 5G</p>
+                  <p class="font-semibold text-center">From ₹9,999</p>
+                </swiper-slide>
+                <swiper-slide class="flex flex-col lg:h-[280px]">
+                  <img
+                    class="p-8 hover:scale-[1.05]"
+                    src="https://rukminim2.flixcart.com/image/612/612/xif0q/pendant-locket/7/u/u/na-na-27552-gold-karishma-kreations-original-imah26hknyagahek.jpeg?q=70"
+                    alt=""
+                  />
+                  <p class="text-center">moto g35 5G</p>
+                  <p class="font-semibold text-center">From ₹9,999</p>
+                </swiper-slide>
+                <swiper-slide class="flex flex-col lg:h-[280px]">
+                  <img
+                    class="p-8 hover:scale-[1.05]"
+                    src="https://rukminim2.flixcart.com/image/612/612/xif0q/t-shirt/o/o/s/m-pckpsrgpr90102-peter-england-original-imagztcen7eg7ygb.jpeg?q=70"
+                    alt=""
+                  />
+                  <p class="text-center">moto g35 5G</p>
+                  <p class="font-semibold text-center">From ₹9,999</p>
+                </swiper-slide>
+                <swiper-slide class="flex flex-col lg:h-[280px]">
+                  <img
+                    class="p-8 scale-[0.9] hover:scale-[1.02]"
+                    src="https://rukminim2.flixcart.com/image/612/612/xif0q/ethnic-set/w/c/1/xl-embro001-tibra-attire-original-imah7hyp4k8hh4ka.jpeg?q=70"
+                    alt=""
+                  />
+                  <p class="text-center">moto g35 5G</p>
+                  <p class="font-semibold text-center">From ₹9,999</p>
+                </swiper-slide>
+                <swiper-slide class="flex flex-col lg:h-[280px]">
+                  <img
+                    class="p-8 hover:scale-[1.05]"
+                    src="https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/w/i/j/4-hrx-059-01-4-hrx-by-hrithik-roshan-off-white-pink-original-imah4tfyyhrxhjcm.jpeg?q=70"
+                    alt=""
+                  />
+                  <p class="text-center">moto g35 5G</p>
+                  <p class="font-semibold text-center">From ₹9,999</p>
+                </swiper-slide>
+                <swiper-slide class="flex flex-col lg:h-[280px]">
+                  <img
+                    class="p-8 hover:scale-[1.05]"
+                    src="https://rukminim2.flixcart.com/image/612/612/jf1fafk0/t-shirt/v/d/n/l-mw99blue-metronaut-original-imaf3jbfhtfxxpgr.jpeg?q=70"
+                    alt=""
+                  />
+                  <p class="text-center">moto g35 5G</p>
+                  <p class="font-semibold text-center">From ₹9,999</p>
+                </swiper-slide>
+              </swiper-container>
+            </div>
+            <div class="w-[18%] h-[300px] hidden lg:block border mt-0">
+              <img
+                class="w-full h-full object-cover bg-cover"
+                src="https://rukminim2.flixcart.com/www/270/360/promos/26/09/2023/6c3c5fe2-c236-4fa2-8d97-595e1e01da01.jpg?q=90"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="slid w-full lg:h-[350px] shadow-lg bg-white pt-2 px-[3vw] mt-12"
+        >
+          <h1 class="text-xl md:text-3xl font-[500] text-[#1F1F1F]">
+            Best Deals on Smartphones
+          </h1>
+          <div>
+            <swiper-container
+              class="mySwiperrr h-full"
+              space-between="30"
+              free-mode="true"
+            >
+              <swiper-slide class="flex flex-col lg:h-[300px]">
+                <img
+                  class="p-7 h-fit hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/o/v/c/g35-5g-pb3h0001in-motorola-original-imah7c6xqfsptyzx.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-6 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/q/y/m/-original-imagz7f9hzrahd2z.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/5/t/j/edge-50-fusion-pb300002in-motorola-original-imahywzrfagkuyxx.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/h/g/z/-original-imah7jsp8bh3s4rv.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/w/y/e/-original-imah7z8pugwfpcbe.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 scale-[1.3] hover:scale-[1.4]"
+                  src="https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/y/8/i/-original-imah4zp7fgtezhsz.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/l/l/s/g64-5g-pb2e0003in-motorola-original-imagzzd3qda9rfzt.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/y/x/f/-original-imah4khx9u3zxdbk.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+            </swiper-container>
+          </div>
+        </div>
+
+        <div class="boxes w-full mt-12 px-0">
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-1">
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/5b4d4e9118e0c6a1.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/5a3f5e023d82d10c.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/0383e3efa8e391e7.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/baf782576023470a.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/0f864abf6acb4597.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/a6d03a1ac18e5b45.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/2ada56d58a5baa42.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/50ecf765e1e2f573.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/dd44962c3e77c83f.jpg?q=90"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="boxes w-full h-auto mt-12 px-0">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div
+              class="box1 h-auto shadow-lg bg-white cursor-pointer pl-3.5 py-2.5"
+            >
+              <div class="top w-full lg:h-20 flex items-center gap-32 px-3">
+                <div
+                  class="text-[#1F1F1F] font-semibold text-[20px] lg:text-[25px]"
+                >
+                  <h1>Wedding & Gifting Specials</h1>
+                </div>
+                <div
+                  class="w-7 h-7 rounded-full cursor-pointer bg-[#2A55E5] flex items-center justify-center"
+                >
+                  <i class="ri-arrow-right-s-line text-2xl text-white"></i>
+                </div>
+              </div>
+              <div class="w-full flex gap-3 lg:h-[300px]">
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/shirt/h/i/f/m-hs-501-green-voroxy-original-imagtkehzunudja8.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px]">Topwear</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Special offer
+                  </p>
+                </div>
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/l58iaa80/jewellery-set/k/p/d/plastic-na-brass-gold-plated-jewel-set-red-laforword-original-imagfy9htenxqmr8.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px]">Jewellery</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 70% Off
+                  </p>
+                </div>
+              </div>
+              <div class="w-full flex gap-3 lg:h-[300px] mt-4">
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-[60%] justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/smartwatch/s/i/u/-original-imah76jt64ffmwg4.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px]">Smart Watches</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 40% Off
+                  </p>
+                </div>
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/ethnic-set/t/c/j/s-kim5182pc3brass-kimayra-original-imahf8ztpjftfpg9.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px]">Women's Ethnic Sets</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 50% Off
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="box1 h-auto shadow-lg bg-white cursor-pointer pl-3.5 py-2.5"
+            >
+              <div class="top w-full lg:h-20 flex items-center gap-32 px-3">
+                <div
+                  class="text-[#1F1F1F] font-semibold text-[20px] lg:text-[25px]"
+                >
+                  <h1>Wedding & Gifting Specials</h1>
+                </div>
+                <div
+                  class="w-7 h-7 rounded-full cursor-pointer bg-[#2A55E5] flex items-center justify-center"
+                >
+                  <i class="ri-arrow-right-s-line text-2xl text-white"></i>
+                </div>
+              </div>
+              <div class="w-full flex gap-3 lg:h-[300px]">
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/slipper-flip-flop/b/m/o/-original-imah2snp7e6zwzzr.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px]">Men's Slippers & Flip</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 70% Offr
+                  </p>
+                </div>
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto lg:h-[70%] justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/6/v/s/8-snk-330-wht-bruton-white-original-imagzzh5k7hrgwzu.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px]">Men's Casual Shoes</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 70% Off
+                  </p>
+                </div>
+              </div>
+              <div class="w-full flex gap-3 lg:h-[300px] mt-4">
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto lg:h-[70%] justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/trimmer/m/q/1/1-10-mm-hair-removal-machine-l-stainless-steel-cordless-waikil-original-imah8zzn6ghrzu8c.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px]">Trimmers</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 50% Off
+                  </p>
+                </div>
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/track-pant/d/u/s/m-w5-dwija-fashion-original-imah3g223myd9fa3.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px]">Men's Track Pants</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 50% Off
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="hidden lg:block cursor-pointer">
+              <img
+                class="w-full h-full"
+                src="./assets/Screenshot 2025-02-03 212653.png"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="boxes w-full mt-8 px-0">
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-1">
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/5b4d4e9118e0c6a1.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/5a3f5e023d82d10c.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/0383e3efa8e391e7.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/baf782576023470a.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/0f864abf6acb4597.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/a6d03a1ac18e5b45.jpg?q=90"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="boxes w-full h-auto mt-12 px-0">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div
+              class="box1 h-auto shadow-lg bg-white cursor-pointer pl-3.5 py-2.5"
+            >
+              <div class="top w-full lg:h-20 flex items-center gap-32 px-3">
+                <div
+                  class="text-[#1F1F1F] font-semibold text-[20px] lg:text-[25px]"
+                >
+                  <h1>Wedding & Gifting Specials</h1>
+                </div>
+                <div
+                  class="w-7 h-7 rounded-full cursor-pointer bg-[#2A55E5] flex items-center justify-center"
+                >
+                  <i class="ri-arrow-right-s-line text-2xl text-white"></i>
+                </div>
+              </div>
+              <div class="w-full flex gap-3 lg:h-[300px]">
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto justify-center items-center">
+                    <img
+                      class="w-[80%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/kj8wccw0-0/carpet-rug/j/b/e/ru-m-chennile-multi-26x72-049-sasta-sunder-tikau-original-imafyuydgfxk4hfn.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px] mt-3.5">Topwear</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Special offer
+                  </p>
+                </div>
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/shopsy-cup-saucer/c/i/p/cups-006-apeiron-original-imah4fv5aktg2hhf.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px] mt-4">Jewellery</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 70% Off
+                  </p>
+                </div>
+              </div>
+              <div class="w-full flex gap-3 lg:h-[300px] mt-4">
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-[60%] justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/shopsy-solar-light-set/f/t/t/solar-lights-for-home-outdoor-led-decoration-waterproof-fence-original-imah5z5kfdfmjmv4.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px] mt-3">Smart Watches</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 40% Off
+                  </p>
+                </div>
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/home-temple/t/a/q/29-23-0-637-ektmwd-05tem1-db-ekhasa-30-original-imah4v34gk4va36x.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px] mt-4">Women's Ethnic Sets</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 50% Off
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="box1 h-auto shadow-lg bg-white cursor-pointer pl-3.5 py-2.5"
+            >
+              <div class="top w-full lg:h-20 flex items-center gap-32 px-3">
+                <div
+                  class="text-[#1F1F1F] font-semibold text-[20px] lg:text-[25px]"
+                >
+                  <h1>Wedding & Gifting Specials</h1>
+                </div>
+                <div
+                  class="w-7 h-7 rounded-full cursor-pointer bg-[#2A55E5] flex items-center justify-center"
+                >
+                  <i class="ri-arrow-right-s-line text-2xl text-white"></i>
+                </div>
+              </div>
+              <div class="w-full flex gap-3 lg:h-[300px]">
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/slipper-flip-flop/h/m/a/7-mrj1586-aadi-black-original-imah8cp5sahbwrvn.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px] mt-3">Men's Slippers & Flip</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 70% Offr
+                  </p>
+                </div>
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto lg:h-[70%] justify-center items-center">
+                    <img
+                      class="h-full w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/2/5/j/9-grey-orange-fms-38-9-footox-grey-orange-original-imah5ggwxtzr8bh2.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px] mt-5 lg:mt-0">
+                    Men's Casual Shoes
+                  </p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 70% Off
+                  </p>
+                </div>
+              </div>
+              <div class="w-full flex gap-3 lg:h-[300px] mt-4">
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto lg:h-[70%] justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/trimmer/m/q/1/1-10-mm-hair-removal-machine-l-stainless-steel-cordless-waikil-original-imah8zzn6ghrzu8c.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px]">Trimmers</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 50% Off
+                  </p>
+                </div>
+                <div
+                  class="img w-[46%] h-auto border-2 border-gray-300 rounded-xl pb-5 px-2 pt-5"
+                >
+                  <div class="flex h-auto justify-center items-center">
+                    <img
+                      class="h-[90%] w-[70%] hover:scale-[1.03]"
+                      src="https://rukminim2.flixcart.com/image/612/612/xif0q/track-pant/d/u/s/m-w5-dwija-fashion-original-imah3g223myd9fa3.jpeg?q=70"
+                      alt=""
+                    />
+                  </div>
+                  <p class="text-start text-[20px] mt-3">Men's Track Pants</p>
+                  <p class="text-[#108934] text-[20px] font-semibold">
+                    Min. 50% Off
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="hidden lg:block cursor-pointer">
+              <img
+                class="w-full h-full"
+                src="./assets/Screenshot 2025-02-02 221321.png"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="boxes w-full mt-8 px-0 container">
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-1">
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/5b4d4e9118e0c6a1.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/5a3f5e023d82d10c.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/0383e3efa8e391e7.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/baf782576023470a.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/0f864abf6acb4597.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/a6d03a1ac18e5b45.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/a6f9d0d0136d50ee.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/69ae01602783bcb5.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/ca2e772ed70fd4d7.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/4f50798901af7f46.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/9bdb74abaf28d5e9.jpg?q=90"
+                alt=""
+              />
+            </div>
+            <div class="">
+              <img
+                src="https://rukminim2.flixcart.com/fk-p-flap/520/280/image/969bf5f9e95cf455.jpg?q=90"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="slid w-full lg:h-[350px] shadow-lg bg-white pt-2 px-[3vw] mt-12"
+        >
+          <h1 class="text-xl md:text-3xl font-[500] text-[#1F1F1F]">
+            Best Deals On Appliances
+          </h1>
+          <div>
+            <swiper-container
+              class="mySwiperrre h-full mt-1"
+              space-between="30"
+              free-mode="true"
+            >
+              <swiper-slide class="flex flex-col lg:h-[300px]">
+                <img
+                  class="p-7 h-fit hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/612/612/xif0q/electric-kettle/m/i/a/-original-imah6g5zfnqqfaqm.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-6 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/612/612/xif0q/shirt/l/o/q/3xl-angel-3728-maroon-showoff-original-imah8j2yre7vtpyp.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/612/612/xif0q/air-purifier/m/x/9/25-2-airmega-aim-42-5-6-7-coway-original-imagvfnfgthyhtkc.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/612/612/xif0q/sandal/i/r/b/4-kh-169-shoetopia-white-original-imagu5gywpsmu2mu.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/612/612/xif0q/t-shirt/p/p/q/l-ad-1-sti-original-imah7fha3yknjff4.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 scale-[1.3] hover:scale-[1.4]"
+                  src="https://rukminim2.flixcart.com/image/612/612/xif0q/watch/n/n/t/1-rd-9101-fnb-men-original-imah4jwggae4ncpg.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/612/612/xif0q/dress/e/w/s/xl-7253-tandul-original-imagthkkhwfqzxyy.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+              <swiper-slide class="flex flex-col lg:h-[280px]">
+                <img
+                  class="p-8 hover:scale-[1.05]"
+                  src="https://rukminim2.flixcart.com/image/612/612/xif0q/shirt/a/o/h/xxl-box01-jackbella-original-imah8nrbtup5pdab.jpeg?q=70"
+                  alt=""
+                />
+                <p class="text-center">moto g35 5G</p>
+                <p class="font-semibold text-center">From ₹9,999</p>
+              </swiper-slide>
+            </swiper-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer section (unchanged) -->
+    <div class="bg-[#172337] text-white py-6 border-b border-[#454d5e]">
+      <div class="max-w-8xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 px-[6%]">
+        <div>
+          <h4 class="text-[#878787] text-xs uppercase mb-2.5">ABOUT</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >Contact Us</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >About Us</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline">Careers</a>
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >Flipkart Stories</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline">Press</a>
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >Corporate Information</a
+              >
+            </li>
+          </ul>
+        </div>
+  
+        <div>
+          <h4 class="text-[#878787] text-xs uppercase mb-2.5">
+            GROUP COMPANIES
+          </h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="#" class="text-xs text-white hover:underline">Myntra</a>
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >Flipkart</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline">Shopsy</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-[#878787] text-xs uppercase mb-2.5">HELP</h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >Payments</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >Shipping</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >Cancellation & Returns</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline">FAQ</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-[#878787] text-xs uppercase mb-2.5">
+            CONSUMER POLICY
+          </h4>
+          <ul class="space-y-2">
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >Cancellation & Returns</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >Terms Of Use</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >Security</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline">Privacy</a>
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >Grievance Redressal</a
+              >
+            </li>
+            <li>
+              <a href="#" class="text-xs text-white hover:underline"
+                >EPR Compliance</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-[#878787] text-xs uppercase mb-2.5">Mail Us:</h4>
+          <p class="text-xs leading-relaxed">
+            Flipkart Internet Private Limited,<br />
+            Buildings Alyssa, Begonia &<br />
+            Clove Embassy Tech Village,<br />
+            Outer Ring Road, Devarabeesanahalli Village,<br />
+            Bengaluru, 560103,<br />
+            Karnataka, India
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-[#172337] text-white py-4">
+      <div
+        class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 px-4 md:flex flex-wrap justify-between items-center"
+      >
+        <div class="flex items-center justify-center lg:justify-start space-x-8">
+          <a href="#" class="flex items-center space-x-1">
+            <img
+              src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/sell-image-9de8ef.svg"
+              alt="Become a Seller"
+              class="h-4"
+            />
+            <span class="text-xs text-white">Become a Seller</span>
+          </a>
+          <a href="#" class="flex items-center space-x-1">
+            <img
+              src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/advertise-image-866c0b.svg"
+              alt="Advertise"
+              class="h-4"
+            />
+            <span class="text-xs text-white">Advertise</span>
+          </a>
+          <a href="#" class="flex items-center space-x-1">
+            <img
+              src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/gift-cards-image-d7ff24.svg"
+              alt="Gift Cards"
+              class="h-4"
+            />
+            <span class="text-xs text-white">Gift Cards</span>
+          </a>
+          <a href="#" class="flex items-center space-x-1">
+            <img
+              src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/help-centre-image-c4ace8.svg"
+              alt="Help Center"
+              class="h-4"
+            />
+            <span class="text-xs text-white">Help Center</span>
+          </a>
+        </div>
+
+        <div class="flex justify-center mt-5 lg:mt-0 items-center  space-x-4">
+          <span class="text-xs text-white "> 2007-2025 Flipkart.com</span>
+          <img
+            src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/payment-method-c454fb.svg"
+            alt="Payment Methods"
+            class="h-4 hidden sm:block"
+          />
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+
+    <script>
+      // Mobile menu functionality
+      const hamburgerIcon = document.getElementById('hamburger-icon');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuContent = document.getElementById('menu-content');
+      const closeMenu = document.getElementById('close-menu');
+
+      function openMenu() {
+        mobileMenu.classList.remove('hidden');
+        // Wait a tiny bit before adding the transform to trigger the animation
+        setTimeout(() => {
+          menuContent.style.transform = 'translateX(0)';
+        }, 10);
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+      }
+
+      function closeMenuHandler() {
+        menuContent.style.transform = 'translateX(-100%)';
+        setTimeout(() => {
+          mobileMenu.classList.add('hidden');
+          document.body.style.overflow = ''; // Restore scrolling
+        }, 300); // Match the duration of the transition
+      }
+
+      hamburgerIcon.addEventListener('click', openMenu);
+      closeMenu.addEventListener('click', closeMenuHandler);
+     
+      // Close menu when clicking outside
+      mobileMenu.addEventListener('click', (e) => {
+        if (e.target === mobileMenu) {
+          closeMenuHandler();
+        }
+      });
+
+      // Slider functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        const slider = document.getElementById("slider-container");
+        const slides = slider.children;
+        const dotsContainer = document.getElementById("dotsContainer");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+        let isDragging = false;
+        let startPos = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+
+        // Create dots
+        for (let i = 0; i < totalSlides; i++) {
+          const dot = document.createElement("button");
+          dot.className =
+            "w-3 h-3 rounded-full bg-white/50 transition-all duration-300 hover:bg-white";
+          dot.addEventListener("click", () => goToSlide(i));
+          dotsContainer.appendChild(dot);
+        }
+
+        const dots = dotsContainer.children;
+
+        // Update dots
+        function updateDots() {
+          for (let i = 0; i < dots.length; i++) {
+            dots[i].className = `w-3 h-3 rounded-full transition-all duration-300 hover:bg-white ${
+              i === currentSlide ? "bg-white" : "bg-white/50"
+            }`;
+          }
+        }
+
+        // Go to specific slide with smooth transition
+        function goToSlide(index) {
+          currentSlide = index;
+          const translate = -currentSlide * 100;
+          slider.style.transform = `translateX(${translate}%)`;
+          slider.style.transition = 'transform 0.5s ease-out';
+          updateDots();
+        }
+
+        // Next slide with boundary check
+        function nextSlide() {
+          if (currentSlide >= totalSlides - 1) {
+            currentSlide = 0;
+          } else {
+            currentSlide++;
+          }
+          goToSlide(currentSlide);
+        }
+
+        // Previous slide with boundary check
+        function prevSlide() {
+          if (currentSlide <= 0) {
+            currentSlide = totalSlides - 1;
+          } else {
+            currentSlide--;
+          }
+          goToSlide(currentSlide);
+        }
+
+        // Touch events
+        slider.addEventListener('touchstart', touchStart);
+        slider.addEventListener('touchmove', touchMove);
+        slider.addEventListener('touchend', touchEnd);
+
+        function touchStart(event) {
+          isDragging = true;
+          startPos = event.touches[0].clientX;
+          slider.style.transition = 'none';
+        }
+
+        function touchMove(event) {
+          if (!isDragging) return;
+          const currentPosition = event.touches[0].clientX;
+          const diff = currentPosition - startPos;
+          const move = (diff / slider.offsetWidth) * 100;
+          currentTranslate = prevTranslate + move;
+          slider.style.transform = `translateX(${currentTranslate}%)`;
+        }
+
+        function touchEnd() {
+          isDragging = false;
+          const movedBy = currentTranslate - prevTranslate;
+         
+          if (Math.abs(movedBy) > 20) {
+            if (movedBy > 0) {
+              prevSlide();
+            } else {
+              nextSlide();
+            }
+          } else {
+            goToSlide(currentSlide);
+          }
+         
+          slider.style.transition = 'transform 0.5s ease-out';
+          prevTranslate = currentTranslate;
+        }
+
+        // Event listeners for buttons
+        nextBtn.addEventListener("click", nextSlide);
+        prevBtn.addEventListener("click", prevSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') prevSlide();
+          if (e.key === 'ArrowRight') nextSlide();
+        });
+
+        // Auto slide with proper cleanup
+        let slideInterval;
+
+        function startAutoSlide() {
+          slideInterval = setInterval(nextSlide, 3000);
+        }
+
+        function stopAutoSlide() {
+          clearInterval(slideInterval);
+        }
+
+        // Pause on hover
+        slider.parentElement.addEventListener("mouseenter", stopAutoSlide);
+        slider.parentElement.addEventListener("mouseleave", startAutoSlide);
+
+        // Initialize
+        updateDots();
+        startAutoSlide();
+
+        // Cleanup on page visibility change
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            stopAutoSlide();
+          } else {
+            startAutoSlide();
+          }
+        });
+      });
+
+      // Swiper configuration
+      const swiper = document.querySelector(".mySwiperr");
+      swiper.setAttribute("slides-per-view", "4");
+
+      function updateSwiperConfig() {
+        const screenWidth = window.innerWidth;
+
+        if (screenWidth <= 640) {
+          swiper.setAttribute("slides-per-view", "1.5");
+        } else if (screenWidth <= 1024) {
+          swiper.setAttribute("slides-per-view", "4");
+        } else {
+          swiper.setAttribute("slides-per-view", "5");
+        }
+      }
+
+      updateSwiperConfig();
+      window.addEventListener("resize", updateSwiperConfig);
+
+      const swiperr = document.querySelector(".mySwiperrr");
+      swiperr.setAttribute("slides-per-view", "6");
+
+      function updateSwiperrrConfig() {
+        const screenWidth = window.innerWidth;
+
+        if (screenWidth <= 640) {
+          swiperr.setAttribute("slides-per-view", "1.5");
+        } else if (screenWidth <= 1024) {
+          swiperr.setAttribute("slides-per-view", "4");
+        } else {
+          swiperr.setAttribute("slides-per-view", "6");
+        }
+      }
+
+      updateSwiperrrConfig();
+      window.addEventListener("resize", updateSwiperrrConfig);
+
+      const swiperrre = document.querySelector(".mySwiperrre");
+      swiperrre.setAttribute("slides-per-view", "6");
+
+      function updateSwiperrreConfig() {
+        const screenWidth = window.innerWidth;
+
+        if (screenWidth <= 640) {
+          swiperrre.setAttribute("slides-per-view", "1.5");
+        } else if (screenWidth <= 1024) {
+          swiperrre.setAttribute("slides-per-view", "4");
+        } else {
+          swiperrre.setAttribute("slides-per-view", "6");
+        }
+      }
+
+      updateSwiperrreConfig();
+      window.addEventListener("resize", updateSwiperrreConfig);
+
+      // Search functionality
+      // Product database (in a real app, this would come from an API)
+      const products = [
+        {
+          id: 1,
+          title: "iPhone 13 Pro Max",
+          price: 119999,
+          image: "https://rukminim2.flixcart.com/image/312/312/ktketu80/mobile/s/l/c/iphone-13-pro-max-mllh3hn-a-apple-original-imag6vzz5qvejz8z.jpeg",
+          category: "Mobiles",
+          brand: "Apple"
+        },
+        {
+          id: 2,
+          title: "Samsung Galaxy S22 Ultra",
+          price: 109999,
+          image: "https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/k/l/l/-original-imagb2f6f5g4xr4g.jpeg",
+          category: "Mobiles",
+          brand: "Samsung"
+        },
+        {
+          id: 3,
+          title: "OnePlus 10 Pro",
+          price: 66999,
+          image: "https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/3/5/l/-original-imagc8f5ufshswz5.jpeg",
+          category: "Mobiles",
+          brand: "OnePlus"
+        },
+        {
+          id: 4,
+          title: "MacBook Air M1",
+          price: 89999,
+          image: "https://rukminim2.flixcart.com/image/312/312/kp5sya80/screen-guard/tempered-glass/o/v/n/apple-macbook-air-m1-13-3-inch-lightwings-original-imag3eb5zftbnpgz.jpeg",
+          category: "Laptops",
+          brand: "Apple"
+        },
+        {
+          id: 5,
+          title: "Dell XPS 13",
+          price: 124990,
+          image: "https://rukminim2.flixcart.com/image/312/312/krjjde80/computer/q/r/9/xps-13-9310-thin-and-light-laptop-dell-original-imag5dfvb8tyhafg.jpeg",
+          category: "Laptops",
+          brand: "Dell"
+        },
+        {
+          id: 6,
+          title: "Sony WH-1000XM4 Headphones",
+          price: 24990,
+          image: "https://rukminim2.flixcart.com/image/312/312/kq18n0w0/headphone/j/z/y/wh-1000xm4-sony-original-imag45g9mh9jz8gz.jpeg",
+          category: "Headphones",
+          brand: "Sony"
+        },
+        {
+          id: 7,
+          title: "Boat Rockerz 550",
+          price: 1999,
+          image: "https://rukminim2.flixcart.com/image/312/312/kqse07k0/headphone/n/a/a/rockerz-550-boat-original-imag4s6gjajqjhhf.jpeg",
+          category: "Headphones",
+          brand: "Boat"
+        },
+        {
+          id: 8,
+          title: "Nike Air Max",
+          price: 10995,
+          image: "https://rukminim2.flixcart.com/image/312/312/xif0q/shoe/7/z/m/6-dn3787-002-nike-9-nike-black-white-original-imagkcaaczhhqgfr.jpeg",
+          category: "Shoes",
+          brand: "Nike"
+        },
+        {
+          id: 9,
+          title: "Adidas Ultraboost",
+          price: 15999,
+          image: "https://rukminim2.flixcart.com/image/312/312/xif0q/shoe/7/9/q/9-eg0691-9-adidas-9-half-grey-grey-original-imagg9j5zzcgzqgz.jpeg",
+          category: "Shoes",
+          brand: "Adidas"
+        },
+        {
+          id: 10,
+          title: "Samsung 55-inch QLED TV",
+          price: 64990,
+          image: "https://rukminim2.flixcart.com/image/312/312/xif0q/television/d/9/p/-original-imagk5jzjuzkjz4y.jpeg",
+          category: "Televisions",
+          brand: "Samsung"
+        },
+        {
+          id: 11,
+          title: "LG 55-inch OLED TV",
+          price: 119990,
+          image: "https://rukminim2.flixcart.com/image/312/312/xif0q/television/v/d/y/-original-imaggj6y6gq7xgrh.jpeg",
+          category: "Televisions",
+          brand: "LG"
+        },
+        {
+          id: 12,
+          title: "Apple Watch Series 7",
+          price: 41900,
+          image: "https://rukminim2.flixcart.com/image/312/312/l0sgyvk0/smartwatch/z/8/8/7-mkud3hn-a-apple-yes-original-imagcg9fq9xghz4b.jpeg",
+          category: "Smart Watches",
+          brand: "Apple"
+        }
+      ];
+
+      // DOM Elements
+      const searchInput = document.getElementById('searchInput');
+      const searchResults = document.getElementById('searchResults');
+      const searchResultsPage = document.getElementById('searchResultsPage');
+      const searchQueryDisplay = document.getElementById('searchQueryDisplay');
+      const searchResultsGrid = document.getElementById('searchResultsGrid');
+      const resultsCount = document.getElementById('resultsCount');
+      const noResults = document.getElementById('noResults');
+      const mainContent = document.getElementById('mainContent');
+
+      // Search function
+      function searchProducts(query) {
+        if (!query.trim()) {
+          return [];
+        }
+        
+        const searchTerms = query.toLowerCase().split(' ');
+        return products.filter(product => {
+          const productText = (product.title + ' ' + product.category + ' ' + product.brand).toLowerCase();
+          return searchTerms.every(term => productText.includes(term));
+        });
+      }
+
+      // Display search results in dropdown
+      function displaySearchResults(results) {
+        searchResults.innerHTML = '';
+        
+        if (results.length === 0) {
+          if (searchInput.value.trim()) {
+            searchResults.innerHTML = '<div class="no-results">No products found</div>';
+          }
+        } else {
+          results.slice(0, 5).forEach(product => {
+            const item = document.createElement('div');
+            item.className = 'search-result-item';
+            item.innerHTML = `
+              <img src="${product.image}" alt="${product.title}">
+              <div class="search-result-info">
+                <div class="search-result-title">${product.title}</div>
+                <div class="search-result-price">₹${product.price.toLocaleString()}</div>
+              </div>
+            `;
+            item.addEventListener('click', () => {
+              showProductPage(product);
+            });
+            searchResults.appendChild(item);
+          });
+        }
+        
+        if (searchInput.value.trim() && results.length > 0) {
+          searchResults.style.display = 'block';
+        } else {
+          searchResults.style.display = 'none';
+        }
+      }
+
+      // Display full search results page
+      function displayFullSearchResults(results, query) {
+        searchQueryDisplay.textContent = query;
+        resultsCount.textContent = `${results.length} results`;
+        searchResultsGrid.innerHTML = '';
+        
+        if (results.length === 0) {
+          noResults.style.display = 'block';
+          searchResultsGrid.style.display = 'none';
+        } else {
+          noResults.style.display = 'none';
+          searchResultsGrid.style.display = 'grid';
+          
+          results.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            productCard.innerHTML = `
+              <div class="product-image-container">
+                <img src="${product.image}" alt="${product.title}" class="product-image">
+              </div>
+              <h3 class="text-md font-medium mb-1 line-clamp-2">${product.title}</h3>
+              <div class="text-green-600 font-semibold">₹${product.price.toLocaleString()}</div>
+              <div class="text-xs text-gray-500 mt-1">${product.brand}</div>
+            `;
+            productCard.addEventListener('click', () => {
+              showProductPage(product);
+            });
+            searchResultsGrid.appendChild(productCard);
+          });
+        }
+        
+        mainContent.style.display = 'none';
+        searchResultsPage.style.display = 'block';
+      }
+
+      // Show product page (simplified for demo)
+      function showProductPage(product) {
+        alert(`Showing details for ${product.title}\nPrice: ₹${product.price.toLocaleString()}`);
+        // In a real app, you would navigate to a product detail page
+      }
+
+      // Event listeners
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim();
+        const results = searchProducts(query);
+        displaySearchResults(results);
+      });
+
+      searchInput.addEventListener('focus', () => {
+        const query = searchInput.value.trim();
+        if (query) {
+          const results = searchProducts(query);
+          displaySearchResults(results);
+        }
+      });
+
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const query = searchInput.value.trim();
+          if (query) {
+            const results = searchProducts(query);
+            displayFullSearchResults(results, query);
+          }
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+          searchResults.style.display = 'none';
+        }
+      });
+
+      // Back button functionality (would be handled by router in a real app)
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && searchResultsPage.style.display !== 'none') {
+          mainContent.style.display = 'block';
+          searchResultsPage.style.display = 'none';
+          searchInput.value = '';
+          searchResults.style.display = 'none';
+        }
+      });
+    </script>
+  </body>
+</html>

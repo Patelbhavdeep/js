@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flipkart Clone</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css">
+  <link rel="shortcut icon" href="https://www.citypng.com/public/uploads/preview/flipkart-logo-icon-hd-png-701751694706828v1habfry9b.png" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <style>
+    /* Custom Styles */
+    :root {
+      --primary: #2874f0;
+      --secondary: #fb641b;
+      --accent: #ff9f00;
+      --dark: #172337;
+      --light-gray: #f1f3f6;
+      --text-dark: #212121;
+      --text-gray: #878787;
+    }
+    
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: var(--light-gray);
+      color: var(--text-dark);
+    }
+    
+    /* Header Styles */
+    .header {
+      background: linear-gradient(to bottom, var(--primary), #1a66e6);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .search-box {
+      background-color: white;
+      border-radius: 2px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .search-box input::placeholder {
+      color: var(--text-gray);
+      font-size: 14px;
+    }
+    
+    /* Product Card Styles */
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .product-image {
+      transition: transform 0.3s ease;
+      object-fit: contain;
+    }
+    
+    .product-card:hover .product-image {
+      transform: scale(1.05);
+    }
+    
+    .price {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+    
+    .original-price {
+      color: var(--text-gray);
+      text-decoration: line-through;
+    }
+    
+    .discount {
+      color: #388e3c;
+    }
+    
+    /* Product Page Styles */
+    .product-container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .highlight-box {
+      background-color: #f5faff;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .tab-btn {
+      position: relative;
+      padding: 12px 24px;
+      font-weight: 500;
+      color: var(--text-gray);
+      transition: all 0.3s ease;
+    }
+    
+    .tab-btn.active {
+      color: var(--primary);
+    }
+    
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--primary);
+    }
+    
+    .thumbnail {
+      border: 1px solid #e0e0e0;
+      transition: all 0.3s ease;
+    }
+    
+    .thumbnail:hover {
+      border-color: var(--primary);
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background-color: #1a66e6;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #e55b16;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .btn-yellow {
+      background-color: var(--accent);
+      color: var(--text-dark);
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-yellow:hover {
+      background-color: #ff8f00;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    /* Loading Animation */
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .spinner {
+      animation: spin 1s linear infinite;
+      border: 4px solid rgba(0,0,0,0.1);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      width: 40px;
+      height: 40px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Page Transitions */
+    .page {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .page.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Footer Styles */
+    .footer {
+      background-color: var(--dark);
+      color: white;
+    }
+    
+    .footer-links h4 {
+      color: #878787;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    
+    .footer-links a {
+      color: white;
+      font-size: 12px;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .product-info {
+        padding: 16px;
+      }
+      
+      .tab-btn {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+    }
+    
+    /* Swiper Custom Styles */
+    swiper-slide {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .swiper-button-prev,
+    .swiper-button-next {
+      background: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .swiper-button-prev::after,
+    .swiper-button-next::after {
+      font-size: 20px;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div id="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="header w-full h-[80px] sticky top-0 z-50">
+    <div class="nav px-3 container mx-auto h-[80px] flex items-center">
+      <img
+        src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS_ag_JaKwMeU0qRSKEYYnWgGPsHcc610M-dI9TCtNqRNTGumS-"
+        class="h-20 cursor-pointer"
+        alt="Flipkart Logo"
+        onclick="showPage('home')"
+      />
+
+      <div class="search-box hidden md:flex w-[53%] h-[45px] rounded-lg ml-10 items-center px-4">
+        <i class="ri-search-line text-xl text-gray-500"></i>
+        <input
+          type="text"
+          class="w-[80%] text-lg text-black font-normal outline-0 ml-2.5 bg-transparent"
+          placeholder="Search for Products, Brands and More"
+        />
+      </div>
+
+      <div class="buttons w-auto gap-3 h-full flex items-center ml-auto space-x-6">
+        <div class="relative group hidden sm:block">
+          <button
+            class="flex items-center space-x-2 bg-transparent px-4 py-2 rounded-lg text-white hover:bg-white hover:text-blue-600 transition"
+          >
+            <i class="ri-user-line text-xl"></i>
+            <span class="font-semibold">Login</span>
+          </button>
+        </div>
+
+        <div class="cart flex items-center gap-3 cursor-pointer text-white hover:bg-white hover:text-blue-600 px-3 py-2 rounded-lg transition">
+          <i class="ri-shopping-cart-2-line text-xl"></i>
+          <p class="hidden xl:block text-lg font-medium">Cart</p>
+        </div>
+        
+        <div class="seller flex items-center gap-3 cursor-pointer text-white hover:bg-white hover:text-blue-600 px-3 py-2 rounded-lg transition">
+          <i class="ri-store-line text-xl"></i>
+          <p class="hidden xl:block text-lg font-medium">Seller</p>
+        </div>
+        
+        <i class="ri-menu-line md:hidden text-2xl pr-4 cursor-pointer text-white" id="hamburger-icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Home Page -->
+  <div id="home-page" class="page active">
+    <div class="main container mx-auto pb-8">
+      <!-- Categories -->
+      <div class="container bg-white shadow-sm mt-5 mx-auto px-0 xl:px-16 rounded-lg overflow-hidden">
+        <div class="mx-auto lg:px-16">
+          <div class="flex items-center justify-between overflow-x-auto py-4 space-x-8 px-4">
+            <div class="flex flex-col items-center min-w-[80px] cursor-pointer group">
+              <img src="https://rukminim1.flixcart.com/flap/80/80/image/29327f40e9c4d26b.png" alt="Grocery" class="w-16">
+              <span class="text-sm mt-1 font-medium text-center">Grocery</span>
+            </div>
+            <div class="flex flex-col items-center min-w-[80px] cursor-pointer group">
+              <img src="https://rukminim1.flixcart.com/flap/80/80/image/22fddf3c7da4c4f4.png" alt="Mobiles" class="w-16">
+              <span class="text-sm mt-1 font-medium text-center">Mobiles</span>
+            </div>
+            <!-- Add more categories -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Slider -->
+      <div class="container-fluid w-full mx-auto mt-4 rounded-lg overflow-hidden">
+        <div class="relative">
+          <div class="overflow-hidden relative" id="slider">
+            <div class="flex transition-transform duration-500 ease-out touch-pan-y" id="slider-container" style="transform: translateX(0%)">
+              <!-- Slides will be added here -->
+            </div>
+            <button class="swiper-button-prev absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
+              <i class="ri-arrow-left-s-line"></i>
+            </button>
+            <button class="swiper-button-next absolute right-4 top-1/2 transform -translate-y-1/2 z-10">
+              <i class="ri-arrow-right-s-line"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Sections -->
+      <div class="slid w-full shadow-lg bg-white pt-4 px-4 mt-8 pb-6 rounded-lg">
+        <div class="flex justify-between items-center mb-4">
+          <h1 class="text-xl md:text-2xl font-bold text-gray-800">Top Offers</h1>
+          <button class="text-blue-600 font-medium hover:underline">View All</button>
+        </div>
+        
+        <div class="flex justify-between">
+          <div class="w-full lg:w-[80%]">
+            <swiper-container class="mySwiperr h-full" space-between="20" free-mode="true">
+              <swiper-slide class="flex flex-col h-[280px] product-card p-4" onclick="showProduct('product1')">
+                <div class="flex-1 flex items-center justify-center">
+                  <img class="product-image h-40 object-contain" src="https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/3/k/z/-original-imah852sfzd9hgju.jpeg?q=70" alt="Running Shoes"/>
+                </div>
+                <div class="mt-4">
+                  <p class="text-center text-sm text-gray-600 line-clamp-2">Premium Running Shoes for Men</p>
+                  <div class="flex items-center justify-center mt-2">
+                    <span class="price">₹1,999</span>
+                    <span class="original-price ml-2">₹2,999</span>
+                    <span class="discount ml-2">33% off</span>
+                  </div>
+                </div>
+              </swiper-slide>
+              
+              <swiper-slide class="flex flex-col h-[280px] product-card p-4" onclick="showProduct('product2')">
+                <div class="flex-1 flex items-center justify-center">
+                  <img class="product-image h-40 object-contain" src="https://rukminim2.flixcart.com/image/612/612/xif0q/bag/p/k/m/-original-imah4v43cjg4d9kh.jpeg?q=70" alt="Backpack"/>
+                </div>
+                <div class="mt-4">
+                  <p class="text-center text-sm text-gray-600 line-clamp-2">American Tourister Backpack</p>
+                  <div class="flex items-center justify-center mt-2">
+                    <span class="price">₹799</span>
+                    <span class="original-price ml-2">₹1,299</span>
+                    <span class="discount ml-2">38% off</span>
+                  </div>
+                </div>
+              </swiper-slide>
+              
+              <!-- Add more products -->
+            </swiper-container>
+          </div>
+          <div class="w-[18%] h-[300px] hidden lg:block rounded-lg overflow-hidden mt-0">
+            <img class="w-full h-full object-cover" src="https://rukminim2.flixcart.com/www/270/360/promos/26/09/2023/6c3c5fe2-c236-4fa2-8d97-595e1e01da01.jpg?q=90" alt=""/>
+          </div>
+        </div>
+      </div>
+
+      <!-- More sections can be added here -->
+    </div>
+  </div>
+
+  <!-- Product Page -->
+  <div id="product-page" class="page">
+    <div class="container mx-auto px-4 py-8">
+      <div id="product-container" class="product-container p-6">
+        <!-- Product content will be loaded here -->
+      </div>
+
+      <!-- Similar Products -->
+      <div class="mt-8 product-container p-6">
+        <h2 class="text-2xl font-bold mb-6">Similar Products</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="similar-products">
+          <!-- Similar products will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer py-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 px-4">
+      <div class="footer-links">
+        <h4>About</h4>
+        <ul class="mt-4 space-y-2">
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <!-- Add more footer links -->
+    </div>
+    
+    <div class="border-t border-gray-700 mt-8 pt-6">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center space-x-4">
+          <span class="text-sm">© 2007-2025 Flipkart.com</span>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <img src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/payment-method-c454fb.svg" alt="Payment Methods" class="h-8">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mock product database
+    const products = {
+      'product1': {
+        id: 'product1',
+        title: 'Premium Running Shoes for Men - Black/Red',
+        price: 1999,
+        originalPrice: 2999,
+        discount: 33,
+        images: [
+          'https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/3/k/z/-original-imah852sfzd9hgju.jpeg?q=70',
+          'https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/3/k/z/-original-imah852sfzd9hgju.jpeg?q=70',
+          'https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/3/k/z/-original-imah852sfzd9hgju.jpeg?q=70'
+        ],
+        brand: 'Nike',
+        color: 'Black/Red',
+        size: ['6', '7', '8', '9', '10'],
+        description: 'Premium running shoes with cushioned soles for maximum comfort during long runs. Breathable mesh upper keeps your feet cool. Perfect for athletes and casual runners alike. The lightweight design reduces fatigue during extended wear.',
+        ratings: 4.5,
+        reviews: 1245,
+        inStock: true,
+        deliveryDate: 'Get it by Tomorrow',
+        offers: [
+          'Bank Offer 10% off on Axis Bank Card',
+          'Special Price Get extra 5% off',
+          'Partner Offer Sign up for Pay Later and get Gift Card worth ₹100'
+        ],
+        specifications: {
+          'Material': 'Mesh & Synthetic',
+          'Closure': 'Lace-Up',
+          'Sole Material': 'Rubber',
+          'Warranty': '6 months',
+          'Gender': 'Men',
+          'Weight': '300g (per shoe)'
+        }
+      },
+      'product2': {
+        id: 'product2',
+        title: 'American Tourister Backpack - Blue (30L)',
+        price: 799,
+        originalPrice: 1299,
+        discount: 38,
+        images: [
+          'https://rukminim2.flixcart.com/image/612/612/xif0q/bag/p/k/m/-original-imah4v43cjg4d9kh.jpeg?q=70',
+          'https://rukminim2.flixcart.com/image/612/612/xif0q/bag/p/k/m/-original-imah4v43cjg4d9kh.jpeg?q=70',
+          'https://rukminim2.flixcart.com/image/612/612/xif0q/bag/p/k/m/-original-imah4v43cjg4d9kh.jpeg?q=70'
+        ],
+        brand: 'American Tourister',
+        color: 'Blue',
+        size: ['30L', '40L', '50L'],
+        description: 'Durable travel backpack with multiple compartments, water-resistant material and comfortable shoulder straps. Perfect for college students and professionals. Features a padded laptop compartment that fits up to 15.6" laptops.',
+        ratings: 4.2,
+        reviews: 856,
+        inStock: true,
+        deliveryDate: 'Get it by Wednesday',
+        offers: [
+          'Bank Offer 5% Cashback on Flipkart Axis Bank Card',
+          'Partner Offer Purchase now & get a surprise cashback coupon for January'
+        ],
+        specifications: {
+          'Material': 'Polyester',
+          'Capacity': '30 Liters',
+          'Number of Compartments': '3',
+          'Water Resistance': 'Yes',
+          'Laptop Sleeve': 'Yes (up to 15.6")',
+          'Weight': '0.8 kg'
+        }
+      }
+    };
+
+    // Similar products data
+    const similarProducts = [
+      {
+        id: 'similar1',
+        title: 'Casual Sneakers for Men - Brown',
+        price: 1499,
+        originalPrice: 2499,
+        discount: 40,
+        image: 'https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/x/b/c/10-2222-groofer-brown-original-imagq5zepkz769eq.jpeg?q=70',
+        ratings: 4.3,
+        brand: 'Puma'
+      },
+      {
+        id: 'similar2',
+        title: 'Sports Shoes for Men - White/Pink',
+        price: 1799,
+        originalPrice: 2999,
+        discount: 40,
+        image: 'https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/w/i/j/4-hrx-059-01-4-hrx-by-hrithik-roshan-off-white-pink-original-imah4tfyyhrxhjcm.jpeg?q=70',
+        ratings: 4.1,
+        brand: 'HRX'
+      },
+      {
+        id: 'similar3',
+        title: 'Formal Shoes for Men - Black',
+        price: 1299,
+        originalPrice: 1999,
+        discount: 35,
+        image: 'https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/7/8/y/6-542-black-6-bruton-black-original-imagz7f9hzrahd2z.jpeg?q=70',
+        ratings: 4.0,
+        brand: 'Bruton'
+      },
+      {
+        id: 'similar4',
+        title: 'Running Shoes for Men - Blue',
+        price: 1599,
+        originalPrice: 2599,
+        discount: 38,
+        image: 'https://rukminim2.flixcart.com/image/612/612/xif0q/shoe/7/z/g/6-542-blue-6-bruton-blue-original-imagz7f9hzrahd2z.jpeg?q=70',
+        ratings: 4.2,
+        brand: 'Bruton'
+      }
+    ];
+
+    // Page routing functions
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(`${pageId}-page`).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function showProduct(productId) {
+      const product = products[productId];
+      if (!product) {
+        showPage('home');
+        return;
+      }
+
+      // Render product details
+      const container = document.getElementById('product-container');
+      container.innerHTML = `
+        <div class="flex flex-col md:flex-row gap-8">
+          <!-- Product Images -->
+          <div class="md:w-2/5">
+            <div class="border rounded-lg p-4 mb-4 flex items-center justify-center bg-gray-50">
+              <img 
+                src="${product.images[0]}" 
+                alt="${product.title}" 
+                class="product-image max-h-96 object-contain"
+                id="main-product-image"
+              >
+            </div>
+            <div class="flex gap-2 overflow-x-auto py-2 px-2">
+              ${product.images.map(img => `
+                <img 
+                  src="${img}" 
+                  alt="Thumbnail" 
+                  class="thumbnail w-16 h-16 object-cover rounded cursor-pointer"
+                  onclick="document.getElementById('main-product-image').src = '${img}'"
+                >
+              `).join('')}
+            </div>
+          </div>
+          
+          <!-- Product Info -->
+          <div class="md:w-3/5">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2">${product.title}</h1>
+            <div class="flex items-center mb-4">
+              <div class="flex text-yellow-400 mr-2">
+                ${'<i class="ri-star-fill"></i>'.repeat(Math.floor(product.ratings))}
+                ${product.ratings % 1 ? '<i class="ri-star-half-fill"></i>' : ''}
+                ${'<i class="ri-star-line"></i>'.repeat(5 - Math.ceil(product.ratings))}
+              </div>
+              <span class="text-blue-600 text-sm">${product.ratings} Ratings & ${product.reviews} Reviews</span>
+              <span class="text-green-600 text-sm ml-4 font-medium">${product.inStock ? 'In Stock' : 'Out of Stock'}</span>
+            </div>
+            
+            <div class="highlight-box p-4 rounded-lg mb-6">
+              <div class="flex items-baseline">
+                <div class="text-3xl font-bold">₹${product.price.toLocaleString()}</div>
+                <div class="text-gray-500 line-through ml-3">₹${product.originalPrice.toLocaleString()}</div>
+                <div class="text-green-600 font-medium ml-3">${product.discount}% off</div>
+              </div>
+              <div class="text-green-600 mt-2 font-medium">${product.deliveryDate}</div>
+            </div>
+            
+            <!-- Offers -->
+            <div class="mb-6 border-b pb-6">
+              <h3 class="font-bold mb-3 text-lg">Available offers</h3>
+              <ul class="space-y-3">
+                ${product.offers.map(offer => `
+                  <li class="flex items-start">
+                    <i class="ri-checkbox-circle-fill text-green-500 mt-1 mr-2"></i>
+                    <span class="text-sm">${offer}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+            
+            <!-- Color & Size -->
+            <div class="mb-6">
+              <div class="mb-4">
+                <h3 class="font-bold mb-2">Color</h3>
+                <div class="flex gap-2 items-center">
+                  <div class="w-8 h-8 rounded-full border-2 border-blue-500" style="background-color: ${product.color.toLowerCase().includes('black') ? '#000' : '#0000FF'}"></div>
+                  <span>${product.color}</span>
+                </div>
+              </div>
+              
+              <div>
+                <h3 class="font-bold mb-2">Size</h3>
+                <div class="flex flex-wrap gap-2">
+                  ${product.size.map(s => `
+                    <button class="px-4 py-2 border rounded hover:bg-blue-50 hover:border-blue-500 focus:bg-blue-50 focus:border-blue-500 focus:ring-1 focus:ring-blue-200">
+                      ${s}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 mt-8">
+              <button class="btn-yellow py-3 px-6 rounded-full flex items-center justify-center">
+                <i class="ri-shopping-cart-line mr-2"></i> ADD TO CART
+              </button>
+              <button class="btn-secondary py-3 px-6 rounded-full flex items-center justify-center">
+                <i class="ri-flashlight-fill mr-2"></i> BUY NOW
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Product Tabs -->
+        <div class="mt-12 border-t pt-6">
+          <div class="flex border-b">
+            <button class="tab-btn active" data-tab="description">Description</button>
+            <button class="tab-btn" data-tab="specifications">Specifications</button>
+            <button class="tab-btn" data-tab="reviews">Reviews</button>
+          </div>
+          
+          <div id="description" class="tab-content active py-6">
+            <h3 class="font-bold text-lg mb-3">Product Description</h3>
+            <p class="text-gray-700">${product.description}</p>
+          </div>
+          
+          <div id="specifications" class="tab-content py-6">
+            <h3 class="font-bold text-lg mb-4">Product Specifications</h3>
+            <table class="w-full">
+              <tbody>
+                ${Object.entries(product.specifications).map(([key, value]) => `
+                  <tr class="border-b">
+                    <td class="py-3 font-medium w-1/3 text-gray-600">${key}</td>
+                    <td class="py-3">${value}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+          
+          <div id="reviews" class="tab-content py-6">
+            <div class="text-center py-8">
+              <i class="ri-discuss-line text-4xl text-gray-400 mb-2"></i>
+              <p class="text-gray-600">No reviews yet</p>
+              <button class="mt-4 btn-primary px-6 py-2 rounded-full">
+                Be the first to review
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Render similar products
+      const similarContainer = document.getElementById('similar-products');
+      similarContainer.innerHTML = similarProducts.map(prod => `
+        <div class="product-card p-4" onclick="showProduct('${prod.id}')">
+          <div class="flex items-center justify-center h-48 bg-gray-50 rounded-lg">
+            <img src="${prod.image}" alt="${prod.title}" class="product-image max-h-full object-contain">
+          </div>
+          <div class="mt-4">
+            <p class="text-sm text-gray-600 line-clamp-2">${prod.brand} ${prod.title}</p>
+            <div class="flex items-center mt-2">
+              <span class="price font-medium">₹${prod.price.toLocaleString()}</span>
+              <span class="original-price text-xs ml-2">₹${prod.originalPrice.toLocaleString()}</span>
+              <span class="discount text-xs ml-2">${prod.discount}% off</span>
+            </div>
+            <div class="flex items-center mt-1">
+              <div class="flex text-yellow-400 text-xs mr-1">
+                ${'<i class="ri-star-fill"></i>'.repeat(Math.floor(prod.ratings))}
+                ${prod.ratings % 1 ? '<i class="ri-star-half-fill"></i>' : ''}
+              </div>
+              <span class="text-gray-500 text-xs">(${Math.floor(prod.ratings * 100)})</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Add tab switching functionality
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('active');
+          });
+          document.querySelectorAll('.tab-content').forEach(c => {
+            c.classList.remove('active');
+          });
+          
+          this.classList.add('active');
+          document.getElementById(this.dataset.tab).classList.add('active');
+        });
+      });
+
+      showPage('product');
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Hide loading screen
+      setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+      }, 500);
+      
+      // Initialize swipers
+      const swiper = document.querySelector(".mySwiperr");
+      swiper.setAttribute("slides-per-view", "4");
+      
+      function updateSwiperConfig() {
+        const screenWidth = window.innerWidth;
+        if (screenWidth <= 640) {
+          swiper.setAttribute("slides-per-view", "1.5");
+        } else if (screenWidth <= 1024) {
+          swiper.setAttribute("slides-per-view", "4");
+        } else {
+          swiper.setAttribute("slides-per-view", "5");
+        }
+      }
+      updateSwiperConfig();
+      window.addEventListener("resize", updateSwiperConfig);
+      
+      // Initialize main slider
+      const sliderContainer = document.getElementById('slider-container');
+      const slides = [
+        'https://rukminim2.flixcart.com/fk-p-flap/1600/270/image/bdec5c09790f854c.png?q=20',
+        'https://rukminim2.flixcart.com/fk-p-flap/1600/270/image/8a89ee09acc1a9e5.jpg?q=20',
+        'https://rukminim2.flixcart.com/fk-p-flap/1600/270/image/c928b14a5cddaf18.jpg?q=20'
+      ];
+      
+      sliderContainer.innerHTML = slides.map(slide => `
+        <div class="min-w-full">
+          <img src="${slide}" class="w-full h-full object-cover" alt="Slide">
+        </div>
+      `).join('');
+      
+      // Show home page by default
+      showPage('home');
+    });
+  </script>
+</body>
+</html>

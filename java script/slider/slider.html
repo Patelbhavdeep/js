@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>इमेज स्लाइडर</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #imageSlider {
+      position: relative;
+      width: 80%;
+      max-width: 1000px;
+      height: 600px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    #imageSlider img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+    #imageSlider img.active {
+      display: block;
+    }
+    .buttons {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 0 20px;
+      
+      color: white;
+      font-size: 24px;
+      border: none;
+      cursor: pointer;
+    }
+    .buttons button {
+      background-color: black;
+      border: none;
+      color: white;
+      font-size: 18px;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 45%;
+      margin: 0 2%;
+    }
+    .buttons button:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+  </style>
+</head>
+<body>
+
+<div id="imageSlider">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUoKV0B7GXf5IHL2fem9xmVrVdGo9pFBTwWA&s" alt="" >
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUoKV0B7GXf5IHL2fem9xmVrVdGo9pFBTwWA&s" alt="">
+  <img src="https://img.freepik.com/free-photo/3d-rendering-hexagonal-texture-background_23-2150796421.jpg?semt=ais_hybrid&w=740" alt="">
+  <img src="https://images.pexels.com/photos/1590549/pexels-photo-1590549.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="">
+  <div class="buttons">
+    <button class="prev">Previous</button>
+    <button class="next">Next</button>
+  </div>
+</div>
+
+<script>
+  const images = document.querySelectorAll('#imageSlider img');
+const prevButton = document.querySelector('.prev');
+const nextButton = document.querySelector('.next');
+
+let currentIndex = 0;
+
+function updateSlider() {
+  images.forEach((img, index) => {
+    img.classList.remove('active');
+    if (index === currentIndex) {
+      img.classList.add('active');
+    }
+  });
+}
+
+prevButton.addEventListener('click', () => {
+  currentIndex = (currentIndex - 1 + images.length) % images.length;
+  updateSlider();
+});
+
+nextButton.addEventListener('click', () => {
+  currentIndex = (currentIndex + 1) % images.length;
+  updateSlider();
+});
+
+updateSlider();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" id="str" placeholder="Enter a string"><br><br>
+  <button id="btn">Count Characters</button>
+  <div id="result"></div>
+
+  <script>
+    let btn = document.getElementById("btn")
+    btn.addEventListener("click", function(){
+      let str = document.getElementById("str").value.toLowerCase()
+      let result = ""
+
+      for(let i = 0; i < str.length; i++) {
+        let ch = str[i]
+        let count = 0
+
+        if (str[i] != " " && str.indexOf(ch) == i) {
+          for(let j = 0; j < str.length; j++) {
+            if(str[j] == ch) {
+              count++
+            }
+          }
+          result += `"${ch}" = ${count}<br>`
+        }
+      }
+
+      document.getElementById("result").innerHTML = result
+      document.getElementById("str").value = ""
+    })
+  </script>
+</body>
+</html>
